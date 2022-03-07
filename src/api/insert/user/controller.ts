@@ -258,10 +258,20 @@ export class HomeController {
     }
     // error ip
     else {
-      await connection.close();
-      ctx.body = ResponseBody.invalidParam(
-        'you can not get w3g ,you know why!!!!',
-      );
+      const time_result = await check_time(ctx, connection, address);
+      if (time_result){
+        await final_method(ctx, connection,time_result,time,address);
+        await send_token(address);
+        await connection.close();
+        ctx.body = ResponseBody.success(
+          'Success Get W3G',
+        );
+      }else{
+        await connection.close();
+        ctx.body = ResponseBody.invalidParam(
+          'you can not get w3g ,you know why!!!!',
+        );
+      }
     }
   }
 }
