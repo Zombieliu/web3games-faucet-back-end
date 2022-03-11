@@ -2,13 +2,16 @@ import Router from '@koa/router';
 
 import { router as homeRouter } from './api/get/home/router';
 import { router as tokenRouter } from './api/get/token/router';
+import { router as balanceRouter } from './api/get/balance/router';
 import { router as ipRouter } from './api/get/ip/router';
 import { router as useRouter } from './api/insert/user/router';
+
 
 export const router = new Router();
 
 const apiV0getRouters = [
   homeRouter,
+  balanceRouter,
   tokenRouter,
   ipRouter,
 ];
