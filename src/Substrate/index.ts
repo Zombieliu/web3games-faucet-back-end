@@ -3,7 +3,7 @@ import { ApiPromise,WsProvider } from '@polkadot/api';
 async function main (account:string) {
 
   // Initialise the provider to connect to the local node
-  const provider = new WsProvider('wss://chain-dev.web3games.org/');
+  const provider = new WsProvider('wss://devnet.web3games.org/');
   // Create the API and wait until ready
   const api = await ApiPromise.create({ provider });
 

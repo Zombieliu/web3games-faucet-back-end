@@ -151,7 +151,7 @@ async function send_token(address:string){
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const value = 5000000000000000000n;
-  const wsProvider = new WsProvider('wss://chain-dev.web3games.org');
+  const wsProvider = new WsProvider('wss://devnet.web3games.org');
   const api = await ApiPromise.create({ provider: wsProvider });
   const [chain, nodeName, nodeVersion] = await Promise.all([
     api.rpc.system.chain(),
