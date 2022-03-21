@@ -1,10 +1,10 @@
 {
-   "type": "mysql",
-   "host": "rm-3ns24op9y3bd55cz8ao.mysql.rds.aliyuncs.com",
-   "port": 3306,
+   "type": "postgres",
+   "host": "pgm-3ns8ck0510ci7s311o.pg.rds.aliyuncs.com",
+   "port": 5432,
    "username": "henry",
-   "password": "Web3games321",
-   "database": "iptest",
+   "password": "Liuhongqi321",
+   "database": "devnet-faucet",
    "synchronize": true,
    "logging": false,
    "entities": [
