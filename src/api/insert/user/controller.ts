@@ -176,7 +176,7 @@ async function send_token(address:string){
       console.log('Included at block hash', status.asInBlock.toHex());
     } else if (status.isFinalized) {
       console.log('Finalized block hash', status.asFinalized.toHex());
-      return;
+      return status.asFinalized.toHex();
     }
   });
 }
@@ -216,15 +216,15 @@ export class HomeController {
       else if (address_result == 1) {
         await add_address(connection,address,ip,country,city,time);
         const sub_address = evm_tosub(address);
-        await send_token(sub_address);
+        const hex = await send_token(sub_address);
         ctx.body = ResponseBody.success(
-          'Success Add NewAccount',
+          hex,
         );
       }else{
         await add_address(connection,address,ip,country,city,time);
-        await send_token(address);
+        const hex = await send_token(address);
         ctx.body = ResponseBody.success(
-          'Success Add NewAccount',
+          hex,
         );
       }
     }
@@ -241,18 +241,18 @@ export class HomeController {
         const sub_address = evm_tosub(address);
         const time_result = await check_time(ctx, connection, sub_address);
         await final_method(ctx, connection,time_result,time,address);
-        await send_token(sub_address);
+        const hex = await send_token(sub_address);
         await connection.close();
         ctx.body = ResponseBody.success(
-          'Success Get W3G',
+          hex,
         );
       } else {
         const time_result = await check_time(ctx, connection, address);
         await final_method(ctx, connection,time_result,time,address);
-        await send_token(address);
+        const hex = await send_token(address);
         await connection.close();
         ctx.body = ResponseBody.success(
-          'Success Get W3G',
+          hex,
         );
       }
     }
@@ -262,9 +262,9 @@ export class HomeController {
       if (time_result){
         await final_method(ctx, connection,time_result,time,address);
         await send_token(address);
-        await connection.close();
+        const hex =await connection.close();
         ctx.body = ResponseBody.success(
-          'Success Get W3G',
+          hex,
         );
       }else{
         await connection.close();
