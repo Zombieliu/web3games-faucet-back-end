@@ -147,7 +147,7 @@ async function add_address(connection:Connection,address:string,ip:string,countr
 }
 
 
-async function send_token(address:string) :Promise<string> {
+async function send_token(address:string) {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const value = 5000000000000000000n;
@@ -170,6 +170,7 @@ async function send_token(address:string) :Promise<string> {
   const transfer = api.tx.balances.transfer(address, value);
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
+
   const hex:string = await transfer.signAndSend(system, { nonce }, ({ events = [], status }) => {
     console.log('Transaction status:', status.type);
     if (status.isInBlock) {
@@ -179,8 +180,7 @@ async function send_token(address:string) :Promise<string> {
       return status.asFinalized.toHex();
     }
   });
-  console.log('hex',hex);
-  return hex;
+  console.log(hex);
 }
 export class HomeController {
   async insertuser(ctx: Context): Promise<void> {
