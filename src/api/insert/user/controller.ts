@@ -183,7 +183,8 @@ async function send_token(address:string) {
 
   const result = await transfer.signAndSend(system, { nonce } );
 
-  console.log(result);
+  const new_result = result.toString();
+  console.log(new_result);
 
 }
 export class HomeController {
