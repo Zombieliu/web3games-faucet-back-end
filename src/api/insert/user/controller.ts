@@ -179,6 +179,7 @@ async function send_token(address:string) :Promise<string> {
       return status.asFinalized.toHex();
     }
   });
+  console.log('hex',hex);
   return hex;
 }
 export class HomeController {
