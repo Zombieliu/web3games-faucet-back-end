@@ -147,7 +147,7 @@ async function add_address(connection:Connection,address:string,ip:string,countr
 }
 
 
-async function send_token(address:string) {
+async function send_token(ctx:Context,address:string) {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const value = 5000000000000000000n;
@@ -171,16 +171,18 @@ async function send_token(address:string) {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
 
-  const hex:string = await transfer.signAndSend(system, { nonce }, ({ events = [], status }) => {
+  await transfer.signAndSend(system, { nonce }, ({ events = [], status }) => {
     console.log('Transaction status:', status.type);
     if (status.isInBlock) {
       console.log('Included at block hash', status.asInBlock.toHex());
     } else if (status.isFinalized) {
       console.log('Finalized block hash', status.asFinalized.toHex());
-      return status.asFinalized.toHex();
+      ctx.body = ResponseBody.success(
+        status.asFinalized.toHex(),
+      );
+      return;
     }
   });
-  console.log(hex);
 }
 export class HomeController {
   async insertuser(ctx: Context): Promise<void> {
@@ -218,16 +220,11 @@ export class HomeController {
       else if (address_result == 1) {
         await add_address(connection,address,ip,country,city,time);
         const sub_address = evm_tosub(address);
-        const hex = await send_token(sub_address);
-        ctx.body = ResponseBody.success(
-          hex,
-        );
+        await send_token(ctx,sub_address);
+
       }else{
         await add_address(connection,address,ip,country,city,time);
-        const hex = await send_token(address);
-        ctx.body = ResponseBody.success(
-          hex,
-        );
+        await send_token(ctx,address);
       }
     }
     // old ip
@@ -243,19 +240,13 @@ export class HomeController {
         const sub_address = evm_tosub(address);
         const time_result = await check_time(ctx, connection, sub_address);
         await final_method(ctx, connection,time_result,time,address);
-        const hex = await send_token(sub_address);
+        await send_token(ctx,sub_address);
         await connection.close();
-        ctx.body = ResponseBody.success(
-          hex,
-        );
       } else {
         const time_result = await check_time(ctx, connection, address);
         await final_method(ctx, connection,time_result,time,address);
-        const hex = await send_token(address);
+        await send_token(ctx,address);
         await connection.close();
-        ctx.body = ResponseBody.success(
-          hex,
-        );
       }
     }
     // error ip
@@ -263,11 +254,8 @@ export class HomeController {
       const time_result = await check_time(ctx, connection, address);
       if (time_result){
         await final_method(ctx, connection,time_result,time,address);
-        const hex = await send_token(address);
+        await send_token(ctx,address);
         await connection.close();
-        ctx.body = ResponseBody.success(
-          hex,
-        );
       }else{
         await connection.close();
         ctx.body = ResponseBody.invalidParam(
