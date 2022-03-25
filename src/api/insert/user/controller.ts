@@ -180,7 +180,6 @@ async function send_token(ctx:Context,address:string) {
       ctx.body = ResponseBody.success(
         status.asFinalized.toHex(),
       );
-      return;
     }
   });
 }
