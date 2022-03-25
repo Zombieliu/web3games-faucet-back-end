@@ -261,8 +261,8 @@ export class HomeController {
       const time_result = await check_time(ctx, connection, address);
       if (time_result){
         await final_method(ctx, connection,time_result,time,address);
-        await send_token(address);
-        const hex =await connection.close();
+        const hex = await send_token(address);
+        await connection.close();
         ctx.body = ResponseBody.success(
           hex,
         );
