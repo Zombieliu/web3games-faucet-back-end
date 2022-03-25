@@ -147,7 +147,7 @@ async function add_address(connection:Connection,address:string,ip:string,countr
 }
 
 
-async function send_token(address:string) {
+async function send_token(address:string) : Promise<string> {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const value = 5000000000000000000n;
@@ -180,12 +180,18 @@ async function send_token(address:string) {
   //     return;
   //   }
   // });
-
-  const result = await transfer.signAndSend(system, { nonce } );
-
-  const new_result = result.toString();
-  console.log(new_result);
-
+  let hash = '';
+  await transfer.signAndSend(system, { nonce }, ({ events = [], status }) => {
+    console.log('Transaction status:', status.type);
+    if (status.isInBlock) {
+      console.log('Included at block hash', status.asInBlock.toHex());
+    } else if (status.isFinalized) {
+      console.log('Finalized block hash', status.asFinalized.toHex());
+      hash = status.asFinalized.toHex();
+      return;
+    }
+  });
+  return hash;
 }
 export class HomeController {
   async insertuser(ctx: Context): Promise<void> {
@@ -229,7 +235,7 @@ export class HomeController {
         );
       }else{
         await add_address(connection,address,ip,country,city,time);
-        const hex = await send_token(address);
+        const hex =await send_token(address);
         ctx.body = ResponseBody.success(
           hex,
         );
